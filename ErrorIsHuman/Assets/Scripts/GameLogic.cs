@@ -15,7 +15,8 @@ namespace ErrorIsHuman
     /// </summary>
     public enum GameScenes
     {
-        MENU = 0
+        MENU = 0,
+        GAME = 1
     }
     
     /// <summary>
@@ -25,20 +26,6 @@ namespace ErrorIsHuman
     [RequireComponent(typeof(AudioSource))]
     public class GameLogic : Singleton<GameLogic>
     {
-        #region Events
-        /// <summary>
-        /// On game pause event
-        /// </summary>
-        public static event Action<bool> OnPause;
-        #endregion
-
-        #region Constants
-        /// <summary>
-        /// Pause button axis
-        /// </summary>
-        private const string pauseButton = "Pause";
-        #endregion
-
         #region Fields
         //Inspector fields
         [SerializeField, Header("Music")]
@@ -53,31 +40,6 @@ namespace ErrorIsHuman
         /// Current loaded scene
         /// </summary>
         public static GameScenes LoadedScene { get; private set; }
-
-        private static bool isPaused;
-        /// <summary>
-        /// If the game is currently paused
-        /// </summary>
-        public static bool IsPaused
-        {
-            get => isPaused;
-            internal set
-            {
-                //Check if the value has changed
-                if (isPaused != value)
-                {
-                    //Set value and stop Unity time
-                    isPaused = value;
-                    Time.timeScale = isPaused ? 0f : 1f;
-
-                    //Log current state
-                    Instance.Log($"Game {(isPaused ? "paused" : "unpaused")}");
-
-                    //Fire pause event
-                    OnPause?.Invoke(isPaused);
-                }
-            }
-        }
 
         /// <summary>
         /// If the current loaded scene is a game scene
@@ -133,14 +95,6 @@ namespace ErrorIsHuman
                 }
             }
 
-            //Scene specific tasks
-            switch (loadedScene)
-            {
-                case GameScenes.MENU:
-                    if (IsPaused) { IsPaused = false; }
-                    break;
-            }
-
             //Log scene change
             this.Log($"Scene loaded - {EnumUtils.GetNameTitleCase(loadedScene)}");
             LoadedScene = loadedScene;
@@ -151,7 +105,7 @@ namespace ErrorIsHuman
         protected override void OnAwake()
         {
             //Opening message
-            this.Log("Running Viral Curse v" + Versioning.VersionString);
+            this.Log("Running Error Is Human v" + Versioning.VersionString);
 
             //Add scene load event
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -162,15 +116,6 @@ namespace ErrorIsHuman
 
             //Setup DOTween
             DOTween.Init(true, true, LogBehaviour.Verbose);
-        }
-
-        private void Update()
-        {
-            //Pauses the game
-            if (!IsPaused && LoadedScene != GameScenes.MENU && Input.GetButtonDown(pauseButton))
-            {
-                IsPaused = true;
-            }
         }
         
         //Make sure to remove events
