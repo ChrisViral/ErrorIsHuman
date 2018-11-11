@@ -26,7 +26,9 @@ namespace ErrorIsHuman.Patient
             this.CurrentStep.OnFail += HurtPatient;
             this.CurrentStep.Activate();
         }
-
+        /// <summary>
+        /// Reduces patients health
+        /// </summary>
         public void HurtPatient()
         {
             Patient.FailedStepLoss();
@@ -37,13 +39,23 @@ namespace ErrorIsHuman.Patient
             this.CurrentStep.OnComplete -= NextStep;
             this.CurrentStep.OnFail -= HurtPatient;
             this.currentIndex++;
-            SetupStep();
+            if(currentIndex == steps.Length)
+            {
+                // Stop the rendering of the wound in room view
+                this.GetComponentInParent<Area>().DisableOverlayWound();
+            }
+            else
+            {
+                SetupStep();
+            }
         }
+        
         #endregion
 
         #region Functions
         private void Start()
         {
+            Patient = GameLogic.
             if (this.steps.Length > 0)
             {
                 SetupStep();

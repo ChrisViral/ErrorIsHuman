@@ -26,22 +26,25 @@ namespace ErrorIsHuman.Patient
         #region Functions
         private void Start()
         {
-            if(proceduresPrefabs.Length == 0)
+            if (proceduresPrefabs.Length == 0)
             {
-                Debug.Log("no procedures were initilized");
+                Debug.Log("no procedures were initialized");
             }
-
-            int numberOfArea = areaPrefabs.Length; 
-                for(int i  = 0; i < proceduresPrefabs.Length; i++)
+            else
             {
-                bool limbSelected = false;
-                while (limbSelected == false)
+                int numberOfArea = areaPrefabs.Length;
+                for (int i = 0; i < proceduresPrefabs.Length; i++)
                 {
-                    int index = Random.Range(0, numberOfArea);
-                    if (areaPrefabs[index].CurrentProcedure == null)
+                    bool limbSelected = false;
+                    while (limbSelected == false)
                     {
-                        areaPrefabs[index].CurrentProcedure = proceduresPrefabs[i];
-                        limbSelected = true;
+                        int index = Random.Range(0, numberOfArea);
+                        if (areaPrefabs[index].CurrentProcedure == null)
+                        {
+                            areaPrefabs[index].CurrentProcedure = proceduresPrefabs[i];
+                            areaPrefabs[index].IsHealthy = false;
+                            limbSelected = true;
+                        }
                     }
                 }
             }
