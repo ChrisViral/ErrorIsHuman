@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - ToolForceps
+  - ToolGauze
+  - ToolNeedle
+  - ToolSyringe
+  - ToolDrain
+  - ToolPatch
   layers:
   - Default
   - TransparentFX

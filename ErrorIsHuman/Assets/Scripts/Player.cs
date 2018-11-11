@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using ErrorIsHuman.Patient;
 using ErrorIsHuman.Patient.Steps;
 using ErrorIsHuman.Utils;
@@ -21,28 +22,32 @@ namespace ErrorIsHuman
         }
 
         [Serializable]
-        public class ToolData
+        public class Tool
         {
+            #region Properties
             [SerializeField]
             private ToolType type;
+            public ToolType Type => this.type;
+
             [SerializeField]
-            private Sprite tool;
+            private Sprite sprite;
+            public Sprite Sprite => this.sprite;
+
             [SerializeField]
-            private Sprite usedTool;
+            private Sprite usedSprite;
+            public Sprite UsedSprite => this.usedSprite;
+            #endregion
         }
 
         #region Fields
         [SerializeField]
-        private Sprite hand;
-        [SerializeField]
-        private ToolData[] tools = new ToolData[0];
+        private Tool[] tools = new Tool[0];
         [SerializeField, Range(0f, 100f)]
         private float stress = 10f;
 
         private new SpriteRenderer renderer;
         private Perlin xPerlin, yPerlin;
         private Vector2 offset;
-        private readonly RaycastHit2D[] hits = new RaycastHit2D[16];
         #endregion
 
         #region Properties
@@ -53,6 +58,21 @@ namespace ErrorIsHuman
         }
         
         public Vector2 ClickPoint => (Vector2)Input.mousePosition + this.offset;
+
+        private Tool currentTool;
+        public Tool CurrentTool
+        {
+            get => this.currentTool;
+            set
+            {
+                this.currentTool = value;
+                this.renderer.sprite = this.currentTool.Sprite;
+            }
+        }
+        #endregion
+
+        #region Methods
+        public void GetHand() => this.CurrentTool = this.tools[(int)ToolType.HAND];
         #endregion
         
         #region Functions
@@ -63,7 +83,7 @@ namespace ErrorIsHuman
             this.yPerlin = new Perlin();
         }
 
-        private void Start() { this.renderer.sprite = this.hand; }
+        private void Start() => GetHand();
 
         private void Update()
         {
@@ -73,39 +93,42 @@ namespace ErrorIsHuman
             if (Input.GetMouseButtonDown(0))
             {
                 Ray ray = Camera.main.ScreenPointToRay(this.ClickPoint);
-                int count = Physics2D.GetRayIntersectionNonAlloc(ray, this.hits, 20f, LayerUtils.GetLayer(Layers.DEFAULT).Mask);
-
+                RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 20f, LayerUtils.GetLayer(Layers.DEFAULT).Mask);
 #if UNITY_EDITOR
-                this.Log($"Origin: {ray.origin.ToString("0.000")}, Direction: {ray.direction.ToString("0.000")}, Hit count: {count}");
+                this.Log($"Origin: {ray.origin.ToString("0.000")}, Direction: {ray.direction.ToString("0.000")}");
+                this.Log($"Object: {hit.collider.name}, Tag: {hit.collider.tag}, Hit position: {hit.point.ToString("0.000")}, Mouse position: {((Vector2)Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition)).ToString("0.000")}");
+                DebugExtension.DebugCircle(hit.point, Vector3.forward, Color.red, 0.25f, 3f);
 #endif
-                for (int i = 0; i < count; i++)
+
+                GameObject go = hit.collider.gameObject;
+                if (go.TryGetComponent(out Step step))
                 {
-                    RaycastHit2D hit = this.hits[i];
 
-#if UNITY_EDITOR
-                    this.Log($"Object: {hit.collider.name}, Hit position: {hit.point.ToString("0.000")}, Mouse position: {((Vector2)Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition)).ToString("0.000")}");
-                    DebugExtension.DebugCircle(hit.point, Vector3.forward, Color.red, 0.25f, 3f);
-#endif
-
-                    GameObject go = hit.collider.gameObject;
-                    if (go.TryGetComponent(out Step step))
-                    {
-
-                    }
+                }
                     
-                    else if (go.TryGetComponent(out Area area))
-                    {
+                else if (go.TryGetComponent(out Area area))
+                {
 
+                }
+
+                else if (go.tag.StartsWith("Tool", true, CultureInfo.InvariantCulture))
+                {
+                    string tool = go.tag.Replace("Tool", string.Empty).ToUpperInvariant();
+                    try
+                    {
+                        ToolType type = EnumUtils.GetValue<ToolType>(tool);
+                        this.CurrentTool = this.tools[(int)type];
                     }
-
-                    else
+                    catch (Exception e)
                     {
-                        switch (go.tag)
-                        {
-
-                        }
+                        this.Log("Invalid tool detected");
+                        this.LogException(e);
                     }
                 }
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                GetHand();
             }
         }
         #endregion
