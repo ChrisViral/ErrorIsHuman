@@ -29,7 +29,7 @@ namespace ErrorIsHuman.Patient
 
         public void HurtPatient()
         {
-
+            Patient.FailedStepLoss();
         }
 
         public void NextStep()
