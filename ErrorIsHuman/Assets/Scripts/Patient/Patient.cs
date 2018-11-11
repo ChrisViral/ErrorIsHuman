@@ -19,31 +19,31 @@ namespace ErrorIsHuman.Patient
         #region Methods
         public void FailedStepLoss()
         {
-            startBloodQuantity -= bloodLoss;
+            this.startBloodQuantity -= this.bloodLoss;
         }
         #endregion
 
         #region Functions
         private void Start()
         {
-            if (proceduresPrefabs.Length == 0)
+            if (this.proceduresPrefabs.Length == 0)
             {
                 Debug.Log("no procedures were initialized");
             }
             else
             {
-                int numberOfArea = areaPrefabs.Length;
-                for (int i = 0; i < proceduresPrefabs.Length; i++)
+                int numberOfArea = this.areaPrefabs.Length;
+                for (int i = 0; i < this.proceduresPrefabs.Length; i++)
                 {
                     bool limbSelected = false;
                     while (limbSelected == false)
                     {
                         int index = Random.Range(0, numberOfArea);
-                        if (areaPrefabs[index].CurrentProcedure == null)
+                        if (this.areaPrefabs[index].CurrentProcedure == null)
                         {
-                            areaPrefabs[index].CurrentProcedure = proceduresPrefabs[i];
-                            areaPrefabs[index].ProcedureIndex = 0;
-                            areaPrefabs[index].IsHealthy = false;
+                            this.areaPrefabs[index].CurrentProcedure = this.proceduresPrefabs[i];
+                            this.areaPrefabs[index].ProcedureIndex = 0;
+                            this.areaPrefabs[index].IsHealthy = false;
                             limbSelected = true;
                         }
                     }
@@ -51,8 +51,5 @@ namespace ErrorIsHuman.Patient
             }
         }
         #endregion
-
-
-
     }
 }
