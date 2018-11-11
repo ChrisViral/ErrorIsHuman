@@ -41,7 +41,7 @@ namespace ErrorIsHuman
 
         #region Fields
         [SerializeField]
-        private Tool[] tools = new Tool[0];
+        private Tool[] tools = new Tool[7];
         [SerializeField, Range(0f, 100f)]
         private float stress = 10f;
 
@@ -107,13 +107,16 @@ namespace ErrorIsHuman
                     GameObject go = hit.collider.gameObject;
                     if (go.TryGetComponent(out Step step))
                     {
+                        switch (step)
+                        {
 
+                        }
                     }
                     
                     else if (go.TryGetComponent(out Area area))
                     {
                         area.OnClick();
-                        Debug.Log(area.name + " collider hit");
+                        this.Log(area.name + " collider hit");
                     }
 
                     else if (go.tag.StartsWith("Tool", true, CultureInfo.InvariantCulture))

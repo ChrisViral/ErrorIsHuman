@@ -4,14 +4,12 @@ using UnityEngine;
 
 namespace ErrorIsHuman.Patient
 {
-    public class Area : MonoBehaviour {
-
+    public class Area : MonoBehaviour
+    {
         #region Fields
         [SerializeField]
         private Sprite areaSprite;
         //private Sprite overlayWound;
-        [SerializeField]
-        private ViewManager viewManager;
 
         //Sprite renderers to alter
         private SpriteRenderer overlayRenderer;
@@ -30,7 +28,7 @@ namespace ErrorIsHuman.Patient
         /// </summary>
         public void OnClick()
         {
-            viewManager.ToAreaView(areaSprite);
+            ViewManager.Instance.ToAreaView(this.gameObject);
         }
         /// <summary>
         /// Disable the overlayWound when the procedure is done
@@ -55,8 +53,5 @@ namespace ErrorIsHuman.Patient
             }
         }
         #endregion
-
-
-
     }
 }
