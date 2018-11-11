@@ -21,6 +21,7 @@ namespace ErrorIsHuman.Patient
         #region Properties
         public bool IsHealthy{ get; set; }
         public Procedure CurrentProcedure { get; set; }
+        public int ProcedureIndex { get; set; }
         #endregion
 
         #region Methods

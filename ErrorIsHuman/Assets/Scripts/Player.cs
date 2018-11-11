@@ -96,33 +96,39 @@ namespace ErrorIsHuman
                 RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 20f, LayerUtils.GetLayer(Layers.DEFAULT).Mask);
 #if UNITY_EDITOR
                 this.Log($"Origin: {ray.origin.ToString("0.000")}, Direction: {ray.direction.ToString("0.000")}");
-                this.Log($"Object: {hit.collider.name}, Tag: {hit.collider.tag}, Hit position: {hit.point.ToString("0.000")}, Mouse position: {((Vector2)Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition)).ToString("0.000")}");
+                if (hit)
+                {
+                    this.Log($"Object: {hit.collider.name}, Tag: {hit.collider.tag}, Hit position: {hit.point.ToString("0.000")}, Mouse position: {((Vector2)Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition)).ToString("0.000")}");
+                }
                 DebugExtension.DebugCircle(hit.point, Vector3.forward, Color.red, 0.25f, 3f);
 #endif
-
-                GameObject go = hit.collider.gameObject;
-                if (go.TryGetComponent(out Step step))
+                if (hit)
                 {
-
-                }
-                    
-                else if (go.TryGetComponent(out Area area))
-                {
-
-                }
-
-                else if (go.tag.StartsWith("Tool", true, CultureInfo.InvariantCulture))
-                {
-                    string tool = go.tag.Replace("Tool", string.Empty).ToUpperInvariant();
-                    try
+                    GameObject go = hit.collider.gameObject;
+                    if (go.TryGetComponent(out Step step))
                     {
-                        ToolType type = EnumUtils.GetValue<ToolType>(tool);
-                        this.CurrentTool = this.tools[(int)type];
+
                     }
-                    catch (Exception e)
+                    
+                    else if (go.TryGetComponent(out Area area))
                     {
-                        this.Log("Invalid tool detected");
-                        this.LogException(e);
+                        area.OnClick();
+                        Debug.Log(area.name + " collider hit");
+                    }
+
+                    else if (go.tag.StartsWith("Tool", true, CultureInfo.InvariantCulture))
+                    {
+                        string tool = go.tag.Replace("Tool", string.Empty).ToUpperInvariant();
+                        try
+                        {
+                            ToolType type = EnumUtils.GetValue<ToolType>(tool);
+                            this.CurrentTool = this.tools[(int)type];
+                        }
+                        catch (Exception e)
+                        {
+                            this.Log("Invalid tool detected");
+                            this.LogException(e);
+                        }
                     }
                 }
             }
