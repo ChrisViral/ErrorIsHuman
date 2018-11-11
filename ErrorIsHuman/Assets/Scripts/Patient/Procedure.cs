@@ -55,7 +55,6 @@ namespace ErrorIsHuman.Patient
         #region Functions
         private void Start()
         {
-            Patient = GameLogic.
             if (this.steps.Length > 0)
             {
                 SetupStep();
