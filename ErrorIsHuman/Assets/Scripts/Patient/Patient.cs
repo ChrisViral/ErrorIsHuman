@@ -12,6 +12,8 @@ namespace ErrorIsHuman.Patient
         [SerializeField]
         private Procedure[] proceduresPrefabs = new Procedure[0];
         [SerializeField]
+        [SerializeField]
+        private Player player;
         private Area[] areas = new Area[6];
         #endregion
 
@@ -20,6 +22,7 @@ namespace ErrorIsHuman.Patient
         public void FailedStepLoss()
         {
             this.startBloodQuantity -= this.bloodLoss;
+            player.increaseStress(10);
         }
         #endregion
 

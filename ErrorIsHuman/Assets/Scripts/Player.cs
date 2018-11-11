@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ErrorIsHuman
 {
-    [DisallowMultipleComponent, RequireComponent(typeof(SpriteRenderer))]
+    [DisallowMultipleComponent, RequireComponent(typeof(SpriteRenderer), typeof(AudioSource))]
     public class Player : MonoBehaviour
     {
         public enum ToolType
@@ -44,9 +44,16 @@ namespace ErrorIsHuman
         [SerializeField]
         private Tool[] tools = new Tool[7];
         [SerializeField, Range(0f, 100f)]
-        private float stress = 10f;
+        private float stress = 0f;
+        [SerializeField, Header("Sounds")]
+        private AudioClip breathing;
+        [SerializeField]
+        private AudioClip breathingFast, breathingNervous, pickupItem; 
+
+
 
         private new SpriteRenderer renderer;
+        private AudioSource audioSource;
         private Perlin xPerlin, yPerlin;
         private Vector2 offset;
         private Step currentStep;
@@ -77,6 +84,29 @@ namespace ErrorIsHuman
 
         #region Methods
         public void GetHand() => this.CurrentTool = this.tools[(int)ToolType.HAND];
+        public void increaseStress(float stressAmount)
+        {
+            this.stress = this.stress + stressAmount;
+            if (this.stress == 100.0f)
+            {
+                audioSource.clip = breathingNervous;
+                Debug.Log("heavy Stress");
+            }
+            else if(this.stress == 70.0f)
+            {
+                audioSource.clip = breathingFast;
+                Debug.Log("Medium Stress");
+                audioSource.Play();
+                audioSource.loop = true;
+            }
+            else if (this.stress == 20.0f)
+            {
+                Debug.Log("low Stress");
+                audioSource.clip = breathing;
+                audioSource.Play();
+                audioSource.loop = true;
+            }
+        }
 
         public void SetUsed() => this.renderer.sprite = this.CurrentTool.UsedSprite;
 
@@ -89,12 +119,13 @@ namespace ErrorIsHuman
         private void Awake()
         {
             this.renderer = GetComponent<SpriteRenderer>();
+            this.audioSource = GetComponent<AudioSource>();
             this.xPerlin = new Perlin();
             this.yPerlin = new Perlin();
+            this.stress = 0;
         }
 
         private void Start() => GetHand();
-
         private void Update()
         {
             this.offset = new Vector2(this.xPerlin.Noise(Time.timeSinceLevelLoad * (this.Stress / 10f)), this.yPerlin.Noise(Time.timeSinceLevelLoad * (this.Stress / 10f))) * this.Stress;
@@ -143,6 +174,7 @@ namespace ErrorIsHuman
                             {
                                 ToolType type = EnumUtils.GetValue<ToolType>(tool);
                                 this.CurrentTool = this.tools[(int)type];
+                                audioSource.PlayOneShot(pickupItem);
                             }
                             catch (Exception e)
                             {
