@@ -1,17 +1,22 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using DG.Tweening;
+using ErrorIsHuman.Base;
+using ErrorIsHuman.Utils;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace ErrorIsHuman
 {
-    public class ViewManager : MonoBehaviour
+    public class ViewManager : Singleton<ViewManager>
     {
         public enum Areas
         {
             TORSO     = 0,
             BELLY     = 1,
-            RIGHT_ARM = 2,
-            LEFT_ARM  = 3,
-            RIGHT_LEG = 4,
-            LEFT_LEG  = 5
+            RIGHTARM = 2,
+            LEFTARM  = 3,
+            RIGHTLEG = 4,
+            LEFTLEG  = 5
         }
 
         #region Fields
@@ -19,28 +24,46 @@ namespace ErrorIsHuman
         private GameObject mainView;
         [SerializeField]
         private GameObject areaView;
+        [SerializeField]
+        private Transform body;
+        [SerializeField]
+        private Image fade;
+        [SerializeField] private Vector2[] positions = new Vector2[6];
         #endregion
 
         #region Methods
         ///<summary>
         /// go to area view
         /// </summary>
-        public void ToAreaView(Sprite areaToRender)
+        public void ToAreaView(GameObject go)
         {
-            this.mainView.SetActive(false);
-            this.areaView.SetActive(true);
-            if(this.areaView.GetComponent<SpriteRenderer>() != null)
-            {
-                this.areaView.GetComponent<SpriteRenderer>().sprite = areaToRender;
-            }
+            if (!go.tag.StartsWith("Area")) { return; }
+            
+            this.body.localPosition = this.positions[(int)EnumUtils.GetValue<Areas>(go.tag.Replace("Area", string.Empty).ToUpperInvariant())];
+            StartCoroutine(Fade(false));
         }
+
+        private IEnumerator<YieldInstruction> Fade(bool mainView)
+        {
+            yield return this.fade.DOFade(1f, 0.5f).WaitForCompletion();
+            this.mainView.SetActive(mainView);
+            this.areaView.SetActive(!mainView);
+            yield return this.fade.DOFade(0f, 0.5f).WaitForCompletion();
+        }
+
         ///<summary>
         /// go back to mainView
         /// </summary>
-        public void ToMain()
+        public void ToMain() => StartCoroutine(Fade(true));
+        #endregion
+
+        #region Functions
+        private void Update()
         {
-            this.mainView.SetActive(true);
-            this.areaView.SetActive(false);
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ToMain();
+            }
         }
         #endregion
     }

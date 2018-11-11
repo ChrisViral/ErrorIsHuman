@@ -10,6 +10,12 @@ TagManager:
   - ToolSyringe
   - ToolDrain
   - ToolPatch
+  - AreaTorso
+  - AreaBelly
+  - AreaLeftArm
+  - AreaRightArm
+  - AreaRightLeg
+  - AreaLeftLeg
   layers:
   - Default
   - TransparentFX

@@ -143,6 +143,11 @@ namespace ErrorIsHuman
 
         private void OnApplicationFocus(bool hasFocus) => Cursor.visible = !hasFocus || CursorVisible;
 
+        private void Update()
+        {
+            if (!CursorVisible && Cursor.visible) { Cursor.visible = false; }
+        }
+
         //Make sure to remove events
         private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
         #endregion
