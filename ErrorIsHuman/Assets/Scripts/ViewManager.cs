@@ -1,9 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace ErrorIsHuman {
-    public class ViewManager : MonoBehaviour {
+namespace ErrorIsHuman
+{
+    public class ViewManager : MonoBehaviour
+    {
+        public enum Areas
+        {
+            TORSO     = 0,
+            BELLY     = 1,
+            RIGHT_ARM = 2,
+            LEFT_ARM  = 3,
+            RIGHT_LEG = 4,
+            LEFT_LEG  = 5
+        }
 
         #region Fields
         [SerializeField, Header("Views")]
@@ -18,11 +27,11 @@ namespace ErrorIsHuman {
         /// </summary>
         public void ToAreaView(Sprite areaToRender)
         {
-            mainView.SetActive(false);
-            areaView.SetActive(true);
-            if(areaView.GetComponent<SpriteRenderer>() != null)
+            this.mainView.SetActive(false);
+            this.areaView.SetActive(true);
+            if(this.areaView.GetComponent<SpriteRenderer>() != null)
             {
-                areaView.GetComponent<SpriteRenderer>().sprite = areaToRender;
+                this.areaView.GetComponent<SpriteRenderer>().sprite = areaToRender;
             }
         }
         ///<summary>
@@ -30,10 +39,9 @@ namespace ErrorIsHuman {
         /// </summary>
         public void ToMain()
         {
-            mainView.SetActive(true);
-            areaView.SetActive(false);
+            this.mainView.SetActive(true);
+            this.areaView.SetActive(false);
         }
-
         #endregion
     }
 }

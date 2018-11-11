@@ -12,13 +12,13 @@ namespace ErrorIsHuman
     {
         public enum ToolType
         {
-            GAUZE,
-            FORCEPS,
-            NEEDLE,
-            SYRINGE,
-            HAND,
-            DRAIN,
-            PATCH
+            GAUZE   = 0,
+            FORCEPS = 1,
+            NEEDLE  = 2,
+            SYRINGE = 3,
+            HAND    = 4,
+            DRAIN   = 5,
+            PATCH   = 6
         }
 
         [Serializable]
