@@ -15,7 +15,7 @@ namespace ErrorIsHuman
     /// </summary>
     public enum GameScenes
     {
-        MENU = 0
+        GAME = 0
     }
     
     /// <summary>
@@ -25,20 +25,6 @@ namespace ErrorIsHuman
     [RequireComponent(typeof(AudioSource))]
     public class GameLogic : Singleton<GameLogic>
     {
-        #region Events
-        /// <summary>
-        /// On game pause event
-        /// </summary>
-        public static event Action<bool> OnPause;
-        #endregion
-
-        #region Constants
-        /// <summary>
-        /// Pause button axis
-        /// </summary>
-        private const string pauseButton = "Pause";
-        #endregion
-
         #region Fields
         //Inspector fields
         [SerializeField, Header("Music")]
@@ -54,35 +40,16 @@ namespace ErrorIsHuman
         /// </summary>
         public static GameScenes LoadedScene { get; private set; }
 
-        private static bool isPaused;
-        /// <summary>
-        /// If the game is currently paused
-        /// </summary>
-        public static bool IsPaused
+        private static bool visible = true;
+        public static bool CursorVisible
         {
-            get => isPaused;
-            internal set
+            get => visible;
+            set
             {
-                //Check if the value has changed
-                if (isPaused != value)
-                {
-                    //Set value and stop Unity time
-                    isPaused = value;
-                    Time.timeScale = isPaused ? 0f : 1f;
-
-                    //Log current state
-                    Instance.Log($"Game {(isPaused ? "paused" : "unpaused")}");
-
-                    //Fire pause event
-                    OnPause?.Invoke(isPaused);
-                }
+                visible = value;
+                Cursor.visible = visible;
             }
         }
-
-        /// <summary>
-        /// If the current loaded scene is a game scene
-        /// </summary>
-        public static bool IsGame => LoadedScene != GameScenes.MENU;
         #endregion
 
         #region Static methods
@@ -133,11 +100,11 @@ namespace ErrorIsHuman
                 }
             }
 
-            //Scene specific tasks
             switch (loadedScene)
             {
-                case GameScenes.MENU:
-                    if (IsPaused) { IsPaused = false; }
+                case GameScenes.GAME:
+                    this.Log("turning cursor off");
+                    CursorVisible = false;
                     break;
             }
 
@@ -151,7 +118,7 @@ namespace ErrorIsHuman
         protected override void OnAwake()
         {
             //Opening message
-            this.Log("Running Viral Curse v" + Versioning.VersionString);
+            this.Log("Running Error Is Human v" + Versioning.VersionString);
 
             //Add scene load event
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -164,15 +131,16 @@ namespace ErrorIsHuman
             DOTween.Init(true, true, LogBehaviour.Verbose);
         }
 
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus) { Cursor.visible = CursorVisible; }
+        }
+
         private void Update()
         {
-            //Pauses the game
-            if (!IsPaused && LoadedScene != GameScenes.MENU && Input.GetButtonDown(pauseButton))
-            {
-                IsPaused = true;
-            }
+            if (!CursorVisible && Cursor.visible) { Cursor.visible = false; }
         }
-        
+
         //Make sure to remove events
         private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
         #endregion

@@ -3,7 +3,19 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - ToolForceps
+  - ToolGauze
+  - ToolNeedle
+  - ToolSyringe
+  - ToolDrain
+  - ToolPatch
+  - AreaTorso
+  - AreaBelly
+  - AreaLeftArm
+  - AreaRightArm
+  - AreaRightLeg
+  - AreaLeftLeg
   layers:
   - Default
   - TransparentFX
@@ -13,7 +25,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Grab
   - 
   - 
   - 
@@ -38,6 +50,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 214618177
+    locked: 0
+  - name: Body
+    uniqueID: 253611461
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Overlay
+    uniqueID: 2417933183
+    locked: 0
+  - name: Hand
+    uniqueID: 3284861771
     locked: 0
