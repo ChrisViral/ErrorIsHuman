@@ -42,6 +42,7 @@ namespace ErrorIsHuman.Patient
                         if (areaPrefabs[index].CurrentProcedure == null)
                         {
                             areaPrefabs[index].CurrentProcedure = proceduresPrefabs[i];
+                            areaPrefabs[index].ProcedureIndex = 0;
                             areaPrefabs[index].IsHealthy = false;
                             limbSelected = true;
                         }

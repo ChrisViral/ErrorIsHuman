@@ -8,15 +8,12 @@ namespace ErrorIsHuman.Patient
         #region Fields
         [SerializeField]
         private Step[] steps = new Step[0];
-        [SerializeField]
-
-        private int currentIndex;
         #endregion
 
         #region Properties
         public Patient Patient { get; set; }
-
-        private Step CurrentStep => this.steps[this.currentIndex];
+        public int CurrentIndex { get; set; }
+        private Step CurrentStep => this.steps[this.CurrentIndex];
         #endregion
 
         #region Methods
@@ -38,8 +35,8 @@ namespace ErrorIsHuman.Patient
         {
             this.CurrentStep.OnComplete -= NextStep;
             this.CurrentStep.OnFail -= HurtPatient;
-            this.currentIndex++;
-            if(currentIndex == steps.Length)
+            this.CurrentIndex++;
+            if(CurrentIndex == steps.Length)
             {
                 // Stop the rendering of the wound in room view
                 this.GetComponentInParent<Area>().DisableOverlayWound();
