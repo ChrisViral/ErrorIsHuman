@@ -95,6 +95,17 @@ namespace ErrorIsHuman
                 }
             }
 
+            switch (loadedScene)
+            {
+                case GameScenes.MENU:
+                    Cursor.visible = true;
+                    break;
+
+                case GameScenes.GAME:
+                    Cursor.visible = false;
+                    break;
+            }
+
             //Log scene change
             this.Log($"Scene loaded - {EnumUtils.GetNameTitleCase(loadedScene)}");
             LoadedScene = loadedScene;
