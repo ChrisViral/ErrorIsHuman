@@ -12,7 +12,7 @@ namespace ErrorIsHuman.Patient
         [SerializeField]
         private Procedure[] proceduresPrefabs = new Procedure[0];
         [SerializeField]
-        private Area[] areaPrefabs = new Area[6];
+        private Area[] areas = new Area[6];
         #endregion
 
 
@@ -32,18 +32,16 @@ namespace ErrorIsHuman.Patient
             }
             else
             {
-                int numberOfArea = this.areaPrefabs.Length;
-                for (int i = 0; i < this.proceduresPrefabs.Length; i++)
+                int numberOfArea = this.areas.Length;
+                foreach (Procedure p in this.proceduresPrefabs)
                 {
                     bool limbSelected = false;
                     while (limbSelected == false)
                     {
                         int index = Random.Range(0, numberOfArea);
-                        if (this.areaPrefabs[index].CurrentProcedure == null)
+                        if (this.areas[index].CurrentProcedure == null)
                         {
-                            this.areaPrefabs[index].CurrentProcedure = this.proceduresPrefabs[i];
-                            this.areaPrefabs[index].ProcedureIndex = 0;
-                            this.areaPrefabs[index].IsHealthy = false;
+                            this.areas[index].SetProcedure(p);
                             limbSelected = true;
                         }
                     }

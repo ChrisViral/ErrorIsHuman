@@ -28,7 +28,13 @@ namespace ErrorIsHuman
         private Transform body;
         [SerializeField]
         private Image fade;
-        [SerializeField] private Vector2[] positions = new Vector2[6];
+        [SerializeField]
+        private Vector2[] positions = new Vector2[6];
+        public Collider2D table;
+        #endregion
+
+        #region MyRegion
+        
         #endregion
 
         #region Methods

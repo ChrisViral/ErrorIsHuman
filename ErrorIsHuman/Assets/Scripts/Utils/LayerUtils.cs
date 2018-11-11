@@ -13,7 +13,8 @@ namespace ErrorIsHuman.Utils
         TRANSPARENT_FX  = 1,
         IGNORE_RAYCAST  = 2,
         WATER           = 4,
-        UI              = 5
+        UI              = 5,
+        GRAB            = 8
     }
 
     /// <summary>
