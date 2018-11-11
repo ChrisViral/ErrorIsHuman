@@ -1,13 +1,14 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace ErrorIsHuman.Patient.Steps
 {
     public abstract class Step : MonoBehaviour
     {
         #region Events
-        public event Action OnFail;
-        public event Action OnComplete;
+        public UnityEvent OnFail = new UnityEvent();
+        public UnityEvent OnComplete = new UnityEvent();
         #endregion
 
         #region Abstract methods
@@ -16,6 +17,12 @@ namespace ErrorIsHuman.Patient.Steps
         public abstract void Fail();
 
         public abstract void Complete();
+
+        public abstract void OnClick(Vector2 positionr);
+
+        public abstract void OnHold(Vector2 position);
+
+        public abstract void OnRelease(Vector2 position);
         #endregion
     }
 }

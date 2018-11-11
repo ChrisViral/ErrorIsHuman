@@ -19,8 +19,8 @@ namespace ErrorIsHuman.Patient
         #region Methods
         private void SetupStep()
         {
-            this.CurrentStep.OnComplete += NextStep;
-            this.CurrentStep.OnFail += HurtPatient;
+            this.CurrentStep.OnComplete.AddListener(NextStep);
+            this.CurrentStep.OnFail.AddListener(HurtPatient);
             this.CurrentStep.Activate();
         }
         /// <summary>
@@ -33,8 +33,8 @@ namespace ErrorIsHuman.Patient
 
         public void NextStep()
         {
-            this.CurrentStep.OnComplete -= NextStep;
-            this.CurrentStep.OnFail -= HurtPatient;
+            this.CurrentStep.OnComplete.RemoveListener(NextStep);
+            this.CurrentStep.OnFail.RemoveListener(HurtPatient);
             this.CurrentIndex++;
             if(CurrentIndex == steps.Length)
             {
