@@ -1044,6 +1044,7 @@ MonoBehaviour:
   - {x: 0.4, y: 0.6}
   - {x: -0.4, y: 0.6}
   table: {fileID: 664928438}
+  patient: {fileID: 1825735546}
 --- !u!4 &1151105660
 Transform:
   m_ObjectHideFlags: 0
@@ -1913,6 +1914,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114903278104501328, guid: 2a928eee19b32bc439a45deecb967a94,
+        type: 2}
+      propertyPath: music.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4256656120669290, guid: 2a928eee19b32bc439a45deecb967a94, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1950,6 +1956,11 @@ Prefab:
       propertyPath: m_PlayOnAwake
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114903278104501328, guid: 2a928eee19b32bc439a45deecb967a94,
+        type: 2}
+      propertyPath: music.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 656f97a8510c58546b789a70ff4d0cab, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a928eee19b32bc439a45deecb967a94, type: 2}
   m_IsPrefabAsset: 0
@@ -2052,6 +2063,7 @@ MonoBehaviour:
   bloodLoss: 500
   proceduresPrefabs:
   - {fileID: 114842095620691932, guid: 24766875a2489dd4987164a35faa7bd4, type: 2}
+  player: {fileID: 0}
   areas:
   - {fileID: 1342685769}
   - {fileID: 1064141787}

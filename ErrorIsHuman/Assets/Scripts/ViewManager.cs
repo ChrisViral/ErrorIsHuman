@@ -31,11 +31,11 @@ namespace ErrorIsHuman
         [SerializeField]
         private Vector2[] positions = new Vector2[6];
         public Collider2D table;
+        [SerializeField]
+        private Patient.Patient patient;
         #endregion
 
-        #region MyRegion
-        
-        #endregion
+        public Patient.Patient Patient => this.patient;
 
         #region Methods
         ///<summary>

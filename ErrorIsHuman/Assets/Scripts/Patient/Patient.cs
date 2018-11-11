@@ -12,8 +12,8 @@ namespace ErrorIsHuman.Patient
         [SerializeField]
         private Procedure[] proceduresPrefabs = new Procedure[0];
         [SerializeField]
-        [SerializeField]
         private Player player;
+        [SerializeField]
         private Area[] areas = new Area[6];
         #endregion
 

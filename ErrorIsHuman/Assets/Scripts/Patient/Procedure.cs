@@ -38,7 +38,7 @@ namespace ErrorIsHuman.Patient
         /// </summary>
         public void HurtPatient()
         {
-            this.Patient.FailedStepLoss();
+            ViewManager.Instance.Patient.FailedStepLoss();
         }
 
         public void NextStep(bool changeSprite)
@@ -66,7 +66,6 @@ namespace ErrorIsHuman.Patient
         #region Functions
         private void Awake()
         {
-            this.patient = FindObjectOfType<Patient>();
             this.renderer = GetComponent<SpriteRenderer>();
             this.renderer.sprite = this.sprites[this.SpriteIndex++];
         }

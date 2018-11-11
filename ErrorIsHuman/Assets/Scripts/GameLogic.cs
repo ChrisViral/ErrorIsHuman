@@ -15,8 +15,7 @@ namespace ErrorIsHuman
     /// </summary>
     public enum GameScenes
     {
-        MENU = 0,
-        GAME = 1
+        GAME = 0
     }
     
     /// <summary>
@@ -40,11 +39,6 @@ namespace ErrorIsHuman
         /// Current loaded scene
         /// </summary>
         public static GameScenes LoadedScene { get; private set; }
-
-        /// <summary>
-        /// If the current loaded scene is a game scene
-        /// </summary>
-        public static bool IsGame => LoadedScene != GameScenes.MENU;
 
         private static bool visible = true;
         public static bool CursorVisible
@@ -108,10 +102,6 @@ namespace ErrorIsHuman
 
             switch (loadedScene)
             {
-                case GameScenes.MENU:
-                    CursorVisible = true;
-                    break;
-
                 case GameScenes.GAME:
                     this.Log("turning cursor off");
                     CursorVisible = false;
