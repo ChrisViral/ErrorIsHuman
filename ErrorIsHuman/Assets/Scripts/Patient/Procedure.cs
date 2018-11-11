@@ -26,10 +26,12 @@ namespace ErrorIsHuman.Patient
             this.CurrentStep.OnFail += HurtPatient;
             this.CurrentStep.Activate();
         }
-
+        /// <summary>
+        /// Reduces patients health
+        /// </summary>
         public void HurtPatient()
         {
-
+            Patient.FailedStepLoss();
         }
 
         public void NextStep()
@@ -37,8 +39,17 @@ namespace ErrorIsHuman.Patient
             this.CurrentStep.OnComplete -= NextStep;
             this.CurrentStep.OnFail -= HurtPatient;
             this.currentIndex++;
-            SetupStep();
+            if(currentIndex == steps.Length)
+            {
+                // Stop the rendering of the wound in room view
+                this.GetComponentInParent<Area>().DisableOverlayWound();
+            }
+            else
+            {
+                SetupStep();
+            }
         }
+        
         #endregion
 
         #region Functions
