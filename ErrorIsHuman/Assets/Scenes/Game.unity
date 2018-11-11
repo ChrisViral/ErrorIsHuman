@@ -418,7 +418,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.475
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2063,7 +2063,7 @@ MonoBehaviour:
   bloodLoss: 500
   proceduresPrefabs:
   - {fileID: 114842095620691932, guid: 24766875a2489dd4987164a35faa7bd4, type: 2}
-  player: {fileID: 0}
+  player: {fileID: 1209975679}
   areas:
   - {fileID: 1342685769}
   - {fileID: 1064141787}

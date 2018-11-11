@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DG.Tweening;
 using ErrorIsHuman.Utils;
 using UnityEngine;
 
@@ -20,31 +19,39 @@ namespace ErrorIsHuman.Patient.Steps
             {
                 this.dragging = hit.collider;
                 this.startPos = this.dragging.transform.position;
-                this.dragging.transform.SetParent(player.transform);
             }
         }
 
-        public override void OnHold(Vector2 position, Player player) { }
+        public override void OnHold(Vector2 position, Player player)
+        {
+            if (this.dragging)
+            {
+                this.dragging.transform.position = position;
+            }
+        }
 
         public override void OnRelease(Vector2 position, Player player)
         {
             if (this.tool != player.CurrentTool.Type) { return; }
 
             this.Log("release");
-            if (ViewManager.Instance.table.bounds.Contains(position))
+            if (this.dragging)
             {
-                this.objects.Remove(this.dragging);
-                Destroy(this.dragging.gameObject);
-                if (this.objects.Count == 0)
+                if (ViewManager.Instance.table.bounds.Contains(position))
                 {
-                    Complete();
+                    this.objects.Remove(this.dragging);
+                    Destroy(this.dragging.gameObject);
+                    if (this.objects.Count == 0)
+                    {
+                        Complete();
+                    }
                 }
-            }
-            else
-            {
-                this.dragging.transform.SetParent(null, true);
-                this.dragging.transform.position = this.startPos;
-                Fail();
+                else
+                {
+                    this.dragging.transform.position = this.startPos;
+                    this.dragging = null;
+                    Fail();
+                }
             }
         }
     }

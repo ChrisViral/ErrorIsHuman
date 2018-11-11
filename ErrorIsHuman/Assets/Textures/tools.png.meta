@@ -127,8 +127,8 @@ TextureImporter:
         y: 288
         width: 53
         height: 47
-      alignment: 9
-      pivot: {x: 0.094339624, y: 0.48936167}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: 2.5, y: 23.5}
@@ -163,8 +163,8 @@ TextureImporter:
         y: 288
         width: 53
         height: 47
-      alignment: 9
-      pivot: {x: 0.094339624, y: 0.48936167}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: 2.5, y: 23.5}
