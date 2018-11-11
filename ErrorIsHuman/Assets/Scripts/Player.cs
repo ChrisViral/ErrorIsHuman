@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 using ErrorIsHuman.Patient;
 using ErrorIsHuman.Patient.Steps;
 using ErrorIsHuman.Utils;
@@ -77,6 +78,8 @@ namespace ErrorIsHuman
                 this.renderer.sprite = this.currentTool.Sprite;
             }
         }
+
+        public Collider2D HitCollider { get; private set; }
         #endregion
 
         #region Methods
@@ -104,6 +107,12 @@ namespace ErrorIsHuman
                 audioSource.loop = true;
             }
         }
+
+        public void SetUsed() => this.renderer.sprite = this.CurrentTool.UsedSprite;
+
+        public Vector2 GetWorldPosition => Camera.main.ScreenToWorldPoint(this.ClickPoint);
+
+        public Ray GetCursorRay => Camera.main.ScreenPointToRay(this.ClickPoint);
         #endregion
         
         #region Functions
@@ -120,42 +129,36 @@ namespace ErrorIsHuman
         private void Update()
         {
             this.offset = new Vector2(this.xPerlin.Noise(Time.timeSinceLevelLoad * (this.Stress / 10f)), this.yPerlin.Noise(Time.timeSinceLevelLoad * (this.Stress / 10f))) * this.Stress;
-            this.transform.position = (Vector2)Camera.main.ScreenToWorldPoint(this.ClickPoint);
+            this.transform.position = this.GetWorldPosition;
 
             if (this.currentStep)
             {
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButton(0))
                 {
-                    this.currentStep.OnRelease(this.transform.position);
-                    this.currentStep = null;
+                    this.currentStep.OnHold(this.transform.position, this);
                 }
                 else
                 {
-                    this.currentStep.OnHold(this.transform.position);
+                    this.currentStep.OnRelease(this.transform.position, this);
+                    this.currentStep = null;
                 }
+
+                this.HitCollider = null;
             }
             else
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Ray ray = Camera.main.ScreenPointToRay(this.ClickPoint);
-                    RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 20f, LayerUtils.GetLayer(Layers.DEFAULT).Mask);
-#if UNITY_EDITOR
-                    this.Log($"Origin: {ray.origin.ToString("0.000")}, Direction: {ray.direction.ToString("0.000")}");
+                    RaycastHit2D hit = Physics2D.GetRayIntersection(this.GetCursorRay, 20f, LayerUtils.GetLayer(Layers.DEFAULT).Mask);
                     if (hit)
                     {
-                        this.Log($"Object: {hit.collider.name}, Tag: {hit.collider.tag}, Hit position: {hit.point.ToString("0.000")}, Mouse position: {((Vector2)Camera.main.ScreenToWorldPoint((Vector2)Input.mousePosition)).ToString("0.000")}");
-                    }
-
-                    DebugExtension.DebugCircle(hit.point, Vector3.forward, Color.red, 0.25f, 3f);
-#endif
-                    if (hit)
-                    {
+                        this.Log(hit.collider.name);
+                        this.HitCollider = hit.collider;
                         GameObject go = hit.collider.gameObject;
                         if (go.TryGetComponent(out Step step))
                         {
                             this.currentStep = step;
-                            step.OnClick(this.transform.position);
+                            step.OnClick(this.transform.position, this);
                         }
 
                         else if (go.TryGetComponent(out Area area))
@@ -183,6 +186,7 @@ namespace ErrorIsHuman
                 }
                 else if (Input.GetMouseButtonDown(1))
                 {
+                    this.HitCollider = null;
                     GetHand();
                 }
             }

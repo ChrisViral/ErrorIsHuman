@@ -141,7 +141,10 @@ namespace ErrorIsHuman
             DOTween.Init(true, true, LogBehaviour.Verbose);
         }
 
-        private void OnApplicationFocus(bool hasFocus) => Cursor.visible = !hasFocus || CursorVisible;
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus) { Cursor.visible = CursorVisible; }
+        }
 
         private void Update()
         {

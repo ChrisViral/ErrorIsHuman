@@ -1,28 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ErrorIsHuman.Patient
 {
     public class Area : MonoBehaviour
     {
-        #region Fields
         [SerializeField]
-        private Sprite areaSprite;
-        //private Sprite overlayWound;
+        private GameObject body;
 
-        //Sprite renderers to alter
-        private SpriteRenderer overlayRenderer;
-        
-        #endregion
+        [SerializeField]
+        private GameObject trauma;
 
         #region Properties
         public bool IsHealthy{ get; set; }
         public Procedure CurrentProcedure { get; set; }
-        public int ProcedureIndex { get; set; }
         #endregion
 
         #region Methods
+        public void SetProcedure(Procedure procedure)
+        {
+            this.CurrentProcedure = Instantiate(procedure, this.body.transform, false);
+            this.CurrentProcedure.AttachArea(this);
+        }
+
+        public void Cure() => this.IsHealthy = true;
+
         /// <summary>
         /// actives area view with this area's sprite
         /// </summary>
@@ -30,27 +31,10 @@ namespace ErrorIsHuman.Patient
         {
             ViewManager.Instance.ToAreaView(this.gameObject);
         }
-        /// <summary>
-        /// Disable the overlayWound when the procedure is done
-        /// </summary>
-        public void DisableOverlayWound()
-        {
-            if (overlayRenderer != null)
-            {
-                overlayRenderer.enabled = false;
-            }
-        }
-        #endregion
 
-        #region Functions
-        private void Start()
+        private void Update()
         {
-            overlayRenderer = this.GetComponentInChildren<SpriteRenderer>();
-            // overlayRenderer.sprite = overlayWound;
-            if (this.IsHealthy == true)
-            {
-                overlayRenderer.enabled = false;
-            }
+            if (this.IsHealthy && this.trauma) { Destroy(this.trauma); }
         }
         #endregion
     }

@@ -1,60 +1,63 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using ErrorIsHuman.Utils;
-namespace ErrorIsHuman.Patient.Steps {
-    [RequireComponent(typeof(CircleCollider2D))]
-    public class HoldStep : Step{
 
+namespace ErrorIsHuman.Patient.Steps
+{
+    [RequireComponent(typeof(Collider2D))]
+    public class HoldStep : Step
+    {
         #region Fields
         [SerializeField]
-        private float holdDuration, rangeCollider;
+        private float holdDuration;
+
         private bool active;
-        private Timer timer = new Timer();
+        private new Collider2D collider;
+        private readonly Timer timer = new Timer();
         #endregion
 
         #region Method
-        public override void OnClick(Vector2 position)
+        public override void OnClick(Vector2 position, Player player)
         {
-            Activate();
-            timer.Start();
+            if (player.CurrentTool.Type != this.tool)
+            {
+                this.Log("wrong tool");
+                return; 
+
+            }
+            this.Log("Start hold");
+            this.timer.Restart();
         }
-        public override void OnHold(Vector2 position)
+
+        public override void OnHold(Vector2 position, Player player)
         {
-            if(Vector2.Distance(position, transform.position) > rangeCollider)
+            if (player.CurrentTool.Type != this.tool) { return; }
+            if (!this.collider.bounds.Contains(position))
             {
                 Fail();
             }
-        }
-        public override void OnRelease(Vector2 position)
-        {
-            if(timer.ElapsedSeconds < holdDuration)
+            else if (this.timer.IsRunning && this.timer.ElapsedSeconds > this.holdDuration)
             {
-                Fail();
-            }
-        }
-        public override void Activate()
-        {
-            active = true;
-            rangeCollider = this.GetComponent<CircleCollider2D>().radius;
-        }
-        public override void Complete()
-        {
-            Debug.Log(this.name + " Complete hold step");
-            OnComplete?.Invoke();
-        }
-        public override void Fail()
-        {
-            Debug.Log(this.name + " failed hold step");
-            OnFail?.Invoke();
-        }
-        #endregion
-        // Update is called once per frame
-        void Update() {
-            if (active && (timer.ElapsedSeconds > holdDuration) )
-            {
+                player.SetUsed();
+                this.timer.Stop();
                 Complete();
             }
         }
+
+        public override void OnRelease(Vector2 position, Player player)
+        {
+            if (player.CurrentTool.Type != this.tool) { return; }
+            if (this.timer.ElapsedSeconds < this.holdDuration)
+            {
+                Fail();
+            }
+        }
+        #endregion
+
+        #region Functions
+        private void Awake()
+        {
+            this.collider = GetComponent<Collider2D>();
+        }
+        #endregion
     }
 }

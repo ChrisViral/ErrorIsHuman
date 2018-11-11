@@ -3,43 +3,57 @@ using UnityEngine;
 
 namespace ErrorIsHuman.Patient
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class Procedure : MonoBehaviour
     {
         #region Fields
         [SerializeField]
         private Step[] steps = new Step[0];
+        [SerializeField]
+        private Sprite[] sprites = new Sprite[0];
+
+        private Area area;
+        private Patient patient;
+        private new SpriteRenderer renderer;
         #endregion
 
         #region Properties
         public Patient Patient { get; set; }
         public int CurrentIndex { get; set; }
+        public int SpriteIndex { get; set; }
         private Step CurrentStep => this.steps[this.CurrentIndex];
         #endregion
 
         #region Methods
+        public void AttachArea(Area area) => this.area = area;
+
         private void SetupStep()
         {
             this.CurrentStep.OnComplete.AddListener(NextStep);
             this.CurrentStep.OnFail.AddListener(HurtPatient);
-            this.CurrentStep.Activate();
+            this.CurrentStep.gameObject.SetActive(true);
         }
         /// <summary>
         /// Reduces patients health
         /// </summary>
         public void HurtPatient()
         {
-            Patient.FailedStepLoss();
+            this.Patient.FailedStepLoss();
         }
 
-        public void NextStep()
+        public void NextStep(bool changeSprite)
         {
+            if (changeSprite)
+            {
+                this.renderer.sprite = this.sprites[this.SpriteIndex++];
+            }
             this.CurrentStep.OnComplete.RemoveListener(NextStep);
             this.CurrentStep.OnFail.RemoveListener(HurtPatient);
+            Destroy(this.CurrentStep.gameObject);
             this.CurrentIndex++;
-            if(CurrentIndex == steps.Length)
+            if(this.CurrentIndex == this.steps.Length)
             {
-                // Stop the rendering of the wound in room view
-                this.GetComponentInParent<Area>().DisableOverlayWound();
+                this.area.Cure();
             }
             else
             {
@@ -50,10 +64,21 @@ namespace ErrorIsHuman.Patient
         #endregion
 
         #region Functions
+        private void Awake()
+        {
+            this.patient = FindObjectOfType<Patient>();
+            this.renderer = GetComponent<SpriteRenderer>();
+            this.renderer.sprite = this.sprites[this.SpriteIndex++];
+        }
+
         private void Start()
         {
             if (this.steps.Length > 0)
             {
+                foreach (Step step in this.steps)
+                {
+                    step.gameObject.SetActive(false);
+                }
                 SetupStep();
             }
         }
