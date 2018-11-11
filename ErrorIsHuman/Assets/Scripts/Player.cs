@@ -1,4 +1,6 @@
-﻿using ErrorIsHuman.Patient.Steps;
+﻿using System;
+using ErrorIsHuman.Patient;
+using ErrorIsHuman.Patient.Steps;
 using ErrorIsHuman.Utils;
 using UnityEngine;
 
@@ -7,21 +9,53 @@ namespace ErrorIsHuman
     [DisallowMultipleComponent, RequireComponent(typeof(SpriteRenderer))]
     public class Player : MonoBehaviour
     {
+        public enum ToolType
+        {
+            GAUZE,
+            FORCEPS,
+            NEEDLE,
+            SYRINGE,
+            HAND,
+            DRAIN,
+            PATCH
+        }
+
+        [Serializable]
+        public class ToolData
+        {
+            [SerializeField]
+            private ToolType type;
+            [SerializeField]
+            private Sprite tool;
+            [SerializeField]
+            private Sprite usedTool;
+        }
+
+        #region Fields
         [SerializeField]
         private Sprite hand;
-
+        [SerializeField]
+        private ToolData[] tools = new ToolData[0];
         [SerializeField, Range(0f, 100f)]
-        private float startStress = 10f;
+        private float stress = 10f;
 
         private new SpriteRenderer renderer;
         private Perlin xPerlin, yPerlin;
         private Vector2 offset;
         private readonly RaycastHit2D[] hits = new RaycastHit2D[16];
-        
-        public float Stress { get; set; }
+        #endregion
 
-        public Vector2 ClickPoint => (Vector2)Input.mousePosition + this.offset;
+        #region Properties
+        public float Stress
+        {
+            get => this.stress;
+            set => this.stress = value;
+        }
         
+        public Vector2 ClickPoint => (Vector2)Input.mousePosition + this.offset;
+        #endregion
+        
+        #region Functions
         private void Awake()
         {
             this.renderer = GetComponent<SpriteRenderer>();
@@ -29,11 +63,7 @@ namespace ErrorIsHuman
             this.yPerlin = new Perlin();
         }
 
-        private void Start()
-        {
-            this.renderer.sprite = this.hand;
-            this.Stress = this.startStress;
-        }
+        private void Start() { this.renderer.sprite = this.hand; }
 
         private void Update()
         {
@@ -62,13 +92,11 @@ namespace ErrorIsHuman
                     {
 
                     }
-
-                    /*
+                    
                     else if (go.TryGetComponent(out Area area))
                     {
 
                     }
-                    */
 
                     else
                     {
@@ -80,5 +108,6 @@ namespace ErrorIsHuman
                 }
             }
         }
+        #endregion
     }
 }
