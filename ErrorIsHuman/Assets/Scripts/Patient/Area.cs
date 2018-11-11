@@ -4,18 +4,18 @@ using UnityEngine;
 
 namespace ErrorIsHuman.Patient
 {
-    [RequireComponent(typeof(SpriteRenderer))]
     public class Area : MonoBehaviour {
 
         #region Fields
         [SerializeField]
-        private Sprite bgSprite;
+        private Sprite areaSprite;
+        //private Sprite overlayWound;
         [SerializeField]
-        private Sprite overlayWound;
+        private ViewManager viewManager;
 
         //Sprite renderers to alter
-        private SpriteRenderer bgRenderer;
         private SpriteRenderer overlayRenderer;
+        
         #endregion
 
         #region Properties
@@ -23,16 +23,14 @@ namespace ErrorIsHuman.Patient
         public Procedure CurrentProcedure { get; set; }
         #endregion
 
-
         #region Methods
         /// <summary>
-        /// Change the background sprite to that of that specific area
+        /// actives area view with this area's sprite
         /// </summary>
-        public void gotoArea()
+        public void OnClick()
         {
-            bgRenderer.sprite = bgSprite;
+            viewManager.ToAreaView(areaSprite);
         }
-
         /// <summary>
         /// Disable the overlayWound when the procedure is done
         /// </summary>
@@ -48,9 +46,8 @@ namespace ErrorIsHuman.Patient
         #region Functions
         private void Start()
         {
-            bgRenderer = this.GetComponentInParent<SpriteRenderer>();
-            overlayRenderer = this.GetComponent<SpriteRenderer>();
-            overlayRenderer.sprite = overlayWound;
+            overlayRenderer = this.GetComponentInChildren<SpriteRenderer>();
+            // overlayRenderer.sprite = overlayWound;
             if (this.IsHealthy == true)
             {
                 overlayRenderer.enabled = false;
