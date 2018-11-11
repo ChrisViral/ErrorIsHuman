@@ -9,13 +9,15 @@ namespace ErrorIsHuman.Patient
 
         #region Fields
         [SerializeField]
-        private Sprite bgSprite;
+        private Sprite areaSprite;
         [SerializeField]
         private Sprite overlayWound;
+        [SerializeField]
+        private AreaViewManager areaViewManager;
 
         //Sprite renderers to alter
-        private SpriteRenderer bgRenderer;
         private SpriteRenderer overlayRenderer;
+        
         #endregion
 
         #region Properties
@@ -23,14 +25,13 @@ namespace ErrorIsHuman.Patient
         public Procedure CurrentProcedure { get; set; }
         #endregion
 
-
         #region Methods
         /// <summary>
         /// Change the background sprite to that of that specific area
         /// </summary>
-        public void gotoArea()
+        public void GoToArea()
         {
-            bgRenderer.sprite = bgSprite;
+            areaViewManager.goToAreaView(areaSprite);
         }
 
         /// <summary>
@@ -48,7 +49,6 @@ namespace ErrorIsHuman.Patient
         #region Functions
         private void Start()
         {
-            bgRenderer = this.GetComponentInParent<SpriteRenderer>();
             overlayRenderer = this.GetComponent<SpriteRenderer>();
             overlayRenderer.sprite = overlayWound;
             if (this.IsHealthy == true)
