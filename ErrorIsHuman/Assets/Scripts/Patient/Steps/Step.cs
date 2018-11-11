@@ -18,7 +18,7 @@ namespace ErrorIsHuman.Patient.Steps
 
         public abstract void Complete();
 
-        public abstract void OnClick(Vector2 positionr);
+        public abstract void OnClick(Vector2 position);
 
         public abstract void OnHold(Vector2 position);
 
