@@ -45,6 +45,17 @@ namespace ErrorIsHuman
         /// If the current loaded scene is a game scene
         /// </summary>
         public static bool IsGame => LoadedScene != GameScenes.MENU;
+
+        private static bool visible = true;
+        public static bool CursorVisible
+        {
+            get => visible;
+            set
+            {
+                visible = value;
+                Cursor.visible = visible;
+            }
+        }
         #endregion
 
         #region Static methods
@@ -98,11 +109,12 @@ namespace ErrorIsHuman
             switch (loadedScene)
             {
                 case GameScenes.MENU:
-                    Cursor.visible = true;
+                    CursorVisible = true;
                     break;
 
                 case GameScenes.GAME:
-                    Cursor.visible = false;
+                    this.Log("turning cursor off");
+                    CursorVisible = false;
                     break;
             }
 
@@ -128,7 +140,9 @@ namespace ErrorIsHuman
             //Setup DOTween
             DOTween.Init(true, true, LogBehaviour.Verbose);
         }
-        
+
+        private void OnApplicationFocus(bool hasFocus) => Cursor.visible = !hasFocus || CursorVisible;
+
         //Make sure to remove events
         private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
         #endregion
